@@ -17,7 +17,7 @@ Logger& getLogger() {
 
 
 extern "C" void setup(ModInfo& info) {
-    info.id = ID;
+    info.id = "customsettingsplus";
     info.version = VERSION;
     modInfo = info;
 	
