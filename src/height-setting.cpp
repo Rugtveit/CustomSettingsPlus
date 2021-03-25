@@ -25,6 +25,6 @@ std::string HeightSetting::GetHeightText()
     int feet = imperialHeights.first;
     float inches = imperialHeights.second;
     std::string preciseInches = MeasurementsUtils::GetPrecisionFloatString(inches, 1);
-    std::string imperialString = std::string(std::to_string(feet) + "\n" + preciseInches + "\"");
+    std::string imperialString = std::to_string(feet) + "\n" + preciseInches + "\"";
     return imperialString;
 }

@@ -10,7 +10,7 @@ std::pair<int, float> MeasurementsUtils::GetImperialHeight(float meters)
 std::string MeasurementsUtils::GetPrecisionFloatString(float value, int precision)
 {
     std::stringstream stream;
-    stream << std::fixed << std::setprecision(2) << value;
+    stream << std::fixed << std::setprecision(precision) << value;
     std::string precisionFloatString = stream.str();
     return precisionFloatString;
 }

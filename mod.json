@@ -11,7 +11,7 @@
       "libcustomsettingsplus.so"
   ],
   "libraryFiles": [
-    "libbeatsaber-hook_1_2_4.so"
+    "libbeatsaber-hook_1_2_3.so"
   ],
   "dependencies": [
       {
