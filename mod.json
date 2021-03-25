@@ -8,7 +8,10 @@
   "packageVersion": "1.14.0",
   "type": "Gameplay",
   "modFiles": [
-      "customsettingsplus.so"
+      "libcustomsettingsplus.so"
+  ],
+  "libraryFiles": [
+    "libbeatsaber-hook_1_2_4.so"
   ],
   "dependencies": [
       {

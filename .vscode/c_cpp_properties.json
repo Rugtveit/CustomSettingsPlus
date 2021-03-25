@@ -3,6 +3,7 @@
     {
       "defines": [
         "VERSION=\"0.1.0\"",
+        "ID=\"customsettingsplus\"",
         "__GNUC__",
         "__aarch64__"
       ],
