@@ -6,8 +6,8 @@ CustomSettingsPlus allows you to change a lot more in the game
 ## **Menu**
 
 ### Height
-- Change between metric and imperial units.
-- Add more precision.
+- ~~Change between metric and imperial units.~~ 
+- ~~Add more precision.~~ 
 
 ### Other
 - Disable flashing E  
