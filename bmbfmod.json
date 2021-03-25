@@ -1,0 +1,29 @@
+{
+  "id": "customsettingsplus",
+  "name": "CustomSettingsPlus",
+  "version": "0.1.0",
+  "author": "Lillie",
+  "description": [
+    "CustomSettingsPlus allows you to change a lot more in the game"
+  ],
+  "category": "Gameplay",
+  "gameVersion": "1.13.2",
+  "platform": "Quest",
+  "components": [
+    {
+      "type": "HookMod",
+      "installAction": {
+        "installLibraryFile": "libcustomsettingsplus.so"
+      },
+      "uninstallAction": {
+        "removeLibraryFile": "libcustomsettingsplus.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libbeatsaber-hook_1_0_10.so"
+      }
+    }
+  ]
+}
