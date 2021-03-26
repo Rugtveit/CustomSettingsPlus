@@ -87,11 +87,17 @@ extern "C" void setup(ModInfo &info)
 extern "C" void load()
 {
     il2cpp_functions::Init();
-
+    getLogger().info("Finding methods...");
+    auto PlayerHeightSC_RefreshUI = il2cpp_utils::FindMethodUnsafe("", "PlayerHeightSettingsController", "RefreshUI", 0);
+    auto FlickeringSign_OnEnable = il2cpp_utils::FindMethodUnsafe("", "FlickeringNeonSign", "OnEnable", 0);
+    auto UIAudioManager_ButtonClick = il2cpp_utils::FindMethodUnsafe("", "BasicUIAudioManager", "HandleButtonClickEvent", 0);
+    auto SongPreview_Start = il2cpp_utils::FindMethodUnsafe("", "SongPreviewPlayer", "Start", 0);
+    getLogger().info("Found all methods!");
+    
     getLogger().info("Installing hooks...");
-    INSTALL_HOOK_OFFSETLESS(getLogger(), PlayerHeightSettingsController_RefreshUI, il2cpp_utils::FindMethodUnsafe("", "PlayerHeightSettingsController", "RefreshUI", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), FlickeringNeonSign_OnEnable, il2cpp_utils::FindMethodUnsafe("", "FlickeringNeonSign", "OnEnable", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), BasicUIAudioManager_HandleButtonClickEvent, il2cpp_utils::FindMethodUnsafe("", "BasicUIAudioManager", "HandleButtonClickEvent", 0));
-    INSTALL_HOOK_OFFSETLESS(getLogger(), SongPreviewPlayer_Start, il2cpp_utils::FindMethodUnsafe("", "SongPreviewPlayer", "Start", 0));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), PlayerHeightSettingsController_RefreshUI, PlayerHeightSC_RefreshUI);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), FlickeringNeonSign_OnEnable, FlickeringSign_OnEnable);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), BasicUIAudioManager_HandleButtonClickEvent, UIAudioManager_ButtonClick);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), SongPreviewPlayer_Start, SongPreview_Start);
     getLogger().info("Installed all hooks!");
 }
