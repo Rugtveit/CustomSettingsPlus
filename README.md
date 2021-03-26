@@ -10,7 +10,7 @@ CustomSettingsPlus allows you to change a lot more in the game
 - ~~Add more precision.~~ 
 
 ### Other
-- Disable flashing E  
+- ~~Disable flashing E~~ 
 
 ## **Audio**
 
