@@ -20,8 +20,8 @@ CustomSettingsPlus allows you to change a lot more in the game
 - Change Bad Cut Sound volume
 
 ### Menu
-- Change Click volume
-- Change Song Preview volume  
+- ~~Change Click volume~~
+- ~~Change Song Preview volume~~  
 
 ## **Gameplay**
 
