@@ -16,8 +16,8 @@ CustomSettingsPlus allows you to change a lot more in the game
 
 ### Gamplay
 
-- Change Cut Sound volume
-- Change Bad Cut Sound volume
+- ~~Change Cut Sound volume~~
+- ~~Change Bad Cut Sound volume~~
 
 ### Menu
 - ~~Change Click volume~~

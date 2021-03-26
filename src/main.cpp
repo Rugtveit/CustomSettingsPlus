@@ -5,6 +5,7 @@
 #include "GlobalNamespace/RandomObjectPicker_1.hpp"
 #include "GlobalNamespace/SongPreviewPlayer.hpp"
 #include "GlobalNamespace/SongPreviewPlayer_AudioSourceVolumeController.hpp"
+#include "GlobalNamespace/NoteCutSoundEffect.hpp"
 #include "UnityEngine/AudioSource.hpp"
 #include "UnityEngine/AudioClip.hpp"
 #include "../include/height-setting.hpp"
@@ -20,6 +21,8 @@ int meterPrecision = 2;
 bool useImperial = false;
 float clickAudioVolume = 1.0f;
 float previewAudioVolume = 0.05f;
+float goodCutVolume = 0.0f;
+float badCutVolume = 1.0f;
 
 Configuration &getConfig()
 {
@@ -74,6 +77,12 @@ MAKE_HOOK_OFFSETLESS(SongPreviewPlayer_Start, void, GlobalNamespace::SongPreview
     SongPreviewPlayer_Start(self);
 }
 
+MAKE_HOOK_OFFSETLESS(NoteCutSoundEffect_Start, void, GlobalNamespace::NoteCutSoundEffect* self)
+{
+    self->badCutVolume = badCutVolume; 
+    self->goodCutVolume = goodCutVolume;
+    NoteCutSoundEffect_Start(self);
+}
 
 extern "C" void setup(ModInfo &info)
 {
@@ -92,12 +101,14 @@ extern "C" void load()
     auto FlickeringSign_OnEnable = il2cpp_utils::FindMethodUnsafe("", "FlickeringNeonSign", "OnEnable", 0);
     auto UIAudioManager_ButtonClick = il2cpp_utils::FindMethodUnsafe("", "BasicUIAudioManager", "HandleButtonClickEvent", 0);
     auto SongPreview_Start = il2cpp_utils::FindMethodUnsafe("", "SongPreviewPlayer", "Start", 0);
+    auto CutSoundEffect_Start = il2cpp_utils::FindMethodUnsafe("", "NoteCutSoundEffect", "Start", 0);
     getLogger().info("Found all methods!");
-    
+
     getLogger().info("Installing hooks...");
     INSTALL_HOOK_OFFSETLESS(getLogger(), PlayerHeightSettingsController_RefreshUI, PlayerHeightSC_RefreshUI);
     INSTALL_HOOK_OFFSETLESS(getLogger(), FlickeringNeonSign_OnEnable, FlickeringSign_OnEnable);
     INSTALL_HOOK_OFFSETLESS(getLogger(), BasicUIAudioManager_HandleButtonClickEvent, UIAudioManager_ButtonClick);
     INSTALL_HOOK_OFFSETLESS(getLogger(), SongPreviewPlayer_Start, SongPreview_Start);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), NoteCutSoundEffect_Start, CutSoundEffect_Start);
     getLogger().info("Installed all hooks!");
 }
