@@ -27,8 +27,8 @@ CustomSettingsPlus allows you to change a lot more in the game
 
 ### Walls
 
-- Disable edge glow
-- Enable core transparency
+- ~~Disable edge glow~~
+- ~~Enable core transparency~~
 
 ### Environments
 

@@ -1,14 +1,5 @@
 #include "main.hpp"
-#include "GlobalNamespace/PlayerHeightSettingsController.hpp"
-#include "TMPro/TextMeshProUGUI.hpp"
-#include "GlobalNamespace/BasicUIAudioManager.hpp"
-#include "GlobalNamespace/RandomObjectPicker_1.hpp"
-#include "GlobalNamespace/SongPreviewPlayer.hpp"
-#include "GlobalNamespace/SongPreviewPlayer_AudioSourceVolumeController.hpp"
-#include "GlobalNamespace/NoteCutSoundEffect.hpp"
-#include "UnityEngine/AudioSource.hpp"
-#include "UnityEngine/AudioClip.hpp"
-#include "../include/height-setting.hpp"
+
 
 static ModInfo modInfo;
 
@@ -23,6 +14,8 @@ float clickAudioVolume = 1.0f;
 float previewAudioVolume = 0.05f;
 float goodCutVolume = 0.0f;
 float badCutVolume = 1.0f;
+bool obstacleCoreActive = false;
+bool obstacleGlowFrameActive = false;
 
 Configuration &getConfig()
 {
@@ -84,6 +77,17 @@ MAKE_HOOK_OFFSETLESS(NoteCutSoundEffect_Start, void, GlobalNamespace::NoteCutSou
     NoteCutSoundEffect_Start(self);
 }
 
+MAKE_HOOK_OFFSETLESS(ParametricBoxFakeGlowController_OnEnable, void, GlobalNamespace::ParametricBoxFakeGlowController* self)
+{
+    ObstacleSetting::SetActiveObstacleGlowFrame(self, obstacleGlowFrameActive);
+}
+
+MAKE_HOOK_OFFSETLESS(StretchableObstacle_SetSizeAndColor, void, GlobalNamespace::StretchableObstacle* self, float width, float height, float length, UnityEngine::Color color)
+{
+    ObstacleSetting::SetActiveObstacleCore(self, obstacleCoreActive);
+    StretchableObstacle_SetSizeAndColor(self, width, height, length, color);
+}
+
 extern "C" void setup(ModInfo &info)
 {
     info.id = ID;
@@ -98,17 +102,21 @@ extern "C" void load()
     il2cpp_functions::Init();
     getLogger().info("Finding methods...");
     auto PlayerHeightSC_RefreshUI = il2cpp_utils::FindMethodUnsafe("", "PlayerHeightSettingsController", "RefreshUI", 0);
-    auto FlickeringSign_OnEnable = il2cpp_utils::FindMethodUnsafe("", "FlickeringNeonSign", "OnEnable", 0);
+    auto FlickeringNSign_OnEnable = il2cpp_utils::FindMethodUnsafe("", "FlickeringNeonSign", "OnEnable", 0);
     auto UIAudioManager_ButtonClick = il2cpp_utils::FindMethodUnsafe("", "BasicUIAudioManager", "HandleButtonClickEvent", 0);
-    auto SongPreview_Start = il2cpp_utils::FindMethodUnsafe("", "SongPreviewPlayer", "Start", 0);
-    auto CutSoundEffect_Start = il2cpp_utils::FindMethodUnsafe("", "NoteCutSoundEffect", "Start", 0);
+    auto SongPPlayer_Start = il2cpp_utils::FindMethodUnsafe("", "SongPreviewPlayer", "Start", 0);
+    auto NCutSoundEffect_Start = il2cpp_utils::FindMethodUnsafe("", "NoteCutSoundEffect", "Start", 0);
+    auto SObstacle_SetSizeAndColor = il2cpp_utils::FindMethodUnsafe("", "StretchableObstacle", "SetSizeAndColor", 4);
+    auto PBoxFakeGlowC_OnEnable = il2cpp_utils::FindMethodUnsafe("", "ParametricBoxFakeGlowController", "OnEnable", 0);
     getLogger().info("Found all methods!");
 
     getLogger().info("Installing hooks...");
     INSTALL_HOOK_OFFSETLESS(getLogger(), PlayerHeightSettingsController_RefreshUI, PlayerHeightSC_RefreshUI);
-    INSTALL_HOOK_OFFSETLESS(getLogger(), FlickeringNeonSign_OnEnable, FlickeringSign_OnEnable);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), FlickeringNeonSign_OnEnable, FlickeringNSign_OnEnable);
     INSTALL_HOOK_OFFSETLESS(getLogger(), BasicUIAudioManager_HandleButtonClickEvent, UIAudioManager_ButtonClick);
-    INSTALL_HOOK_OFFSETLESS(getLogger(), SongPreviewPlayer_Start, SongPreview_Start);
-    INSTALL_HOOK_OFFSETLESS(getLogger(), NoteCutSoundEffect_Start, CutSoundEffect_Start);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), SongPreviewPlayer_Start, SongPPlayer_Start);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), NoteCutSoundEffect_Start, NCutSoundEffect_Start);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), StretchableObstacle_SetSizeAndColor, SObstacle_SetSizeAndColor);
+    INSTALL_HOOK_OFFSETLESS(getLogger(), ParametricBoxFakeGlowController_OnEnable, PBoxFakeGlowC_OnEnable);
     getLogger().info("Installed all hooks!");
 }
