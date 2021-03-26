@@ -1,18 +1,25 @@
 #include "main.hpp"
 #include "GlobalNamespace/PlayerHeightSettingsController.hpp"
 #include "TMPro/TextMeshProUGUI.hpp"
+#include "GlobalNamespace/BasicUIAudioManager.hpp"
+#include "GlobalNamespace/RandomObjectPicker_1.hpp"
+#include "GlobalNamespace/SongPreviewPlayer.hpp"
+#include "GlobalNamespace/SongPreviewPlayer_AudioSourceVolumeController.hpp"
+#include "UnityEngine/AudioSource.hpp"
+#include "UnityEngine/AudioClip.hpp"
 #include "../include/height-setting.hpp"
 
 static ModInfo modInfo;
 
-HeightSetting* heightSetting;
+HeightSetting *heightSetting;
 
 /* Temporary config while I'm working on the main
    features for the mod */
 bool flickerE = false;
 int meterPrecision = 2;
-bool useImperial = false; 
-
+bool useImperial = false;
+float clickAudioVolume = 1.0f;
+float previewAudioVolume = 0.05f;
 
 Configuration &getConfig()
 {
@@ -28,7 +35,7 @@ Logger &getLogger()
     return *logger;
 }
 
-// Gameplay hooks
+// Menu hooks
 
 /* Hooks up to Player Height UI refresh, and doesn't run original code
    Runs my version of code that has Imperial height, and more Precision */
@@ -45,11 +52,28 @@ MAKE_HOOK_OFFSETLESS(PlayerHeightSettingsController_RefreshUI, void, GlobalNames
 
 /* Hooks up to the OnEnable method for Flickering Neon Sign
    And disables it with preventing to call the Flickering Coroutine */
-MAKE_HOOK_OFFSETLESS(FlickeringNeonSign_OnEnable, void, Il2CppObject* self)
+MAKE_HOOK_OFFSETLESS(FlickeringNeonSign_OnEnable, void, Il2CppObject *self)
 {
-    if(!flickerE) return;
+    if (!flickerE) return;
     FlickeringNeonSign_OnEnable(self);
 }
+
+/* Hooks up to the Audio Manager that handles button click sounds and
+   I rewrite the code as audio level is hardcoded. */
+MAKE_HOOK_OFFSETLESS(BasicUIAudioManager_HandleButtonClickEvent, void, GlobalNamespace::BasicUIAudioManager *self)
+{
+    UnityEngine::AudioClip *audioClip = self->randomSoundPicker->PickRandomObject();
+    if (!audioClip) return;
+    self->audioSource->set_pitch(1.0f); // Supposed to be random but min and max pitch is 1 so it's not necessary but could be changed in the future.
+    self->audioSource->PlayOneShot(audioClip, clickAudioVolume);
+}
+
+MAKE_HOOK_OFFSETLESS(SongPreviewPlayer_Start, void, GlobalNamespace::SongPreviewPlayer* self)
+{
+    self->volume = previewAudioVolume;
+    SongPreviewPlayer_Start(self);
+}
+
 
 extern "C" void setup(ModInfo &info)
 {
@@ -67,5 +91,7 @@ extern "C" void load()
     getLogger().info("Installing hooks...");
     INSTALL_HOOK_OFFSETLESS(getLogger(), PlayerHeightSettingsController_RefreshUI, il2cpp_utils::FindMethodUnsafe("", "PlayerHeightSettingsController", "RefreshUI", 0));
     INSTALL_HOOK_OFFSETLESS(getLogger(), FlickeringNeonSign_OnEnable, il2cpp_utils::FindMethodUnsafe("", "FlickeringNeonSign", "OnEnable", 0));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), BasicUIAudioManager_HandleButtonClickEvent, il2cpp_utils::FindMethodUnsafe("", "BasicUIAudioManager", "HandleButtonClickEvent", 0));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), SongPreviewPlayer_Start, il2cpp_utils::FindMethodUnsafe("", "SongPreviewPlayer", "Start", 0));
     getLogger().info("Installed all hooks!");
 }
