@@ -7,6 +7,13 @@ static ModInfo modInfo;
 
 HeightSetting* heightSetting;
 
+/* Temporary config while I'm working on the main
+   features for the mod */
+bool flickerE = false;
+int meterPrecision = 2;
+bool useImperial = false; 
+
+
 Configuration &getConfig()
 {
     static Configuration config(modInfo);
@@ -21,17 +28,27 @@ Logger &getLogger()
     return *logger;
 }
 
+// Gameplay hooks
+
 /* Hooks up to Player Height UI refresh, and doesn't run original code
    Runs my version of code that has Imperial height, and more Precision */
 MAKE_HOOK_OFFSETLESS(PlayerHeightSettingsController_RefreshUI, void, GlobalNamespace::PlayerHeightSettingsController *self)
 {
     heightSetting = new HeightSetting();
-    heightSetting->SetUseImperial(false);
-    heightSetting->SetMeterPrecision(2);
+    heightSetting->SetUseImperial(useImperial);
+    heightSetting->SetMeterPrecision(meterPrecision);
     heightSetting->SetHeight(self->value);
     Il2CppString *heightText = il2cpp_utils::createcsstr(heightSetting->GetHeightText());
     self->text->SetText(heightText);
     delete heightSetting;
+}
+
+/* Hooks up to the OnEnable method for Flickering Neon Sign
+   And disables it with preventing to call the Flickering Coroutine */
+MAKE_HOOK_OFFSETLESS(FlickeringNeonSign_OnEnable, void, Il2CppObject* self)
+{
+    if(!flickerE) return;
+    FlickeringNeonSign_OnEnable(self);
 }
 
 extern "C" void setup(ModInfo &info)
@@ -49,5 +66,6 @@ extern "C" void load()
 
     getLogger().info("Installing hooks...");
     INSTALL_HOOK_OFFSETLESS(getLogger(), PlayerHeightSettingsController_RefreshUI, il2cpp_utils::FindMethodUnsafe("", "PlayerHeightSettingsController", "RefreshUI", 0));
+    INSTALL_HOOK_OFFSETLESS(getLogger(), FlickeringNeonSign_OnEnable, il2cpp_utils::FindMethodUnsafe("", "FlickeringNeonSign", "OnEnable", 0));
     getLogger().info("Installed all hooks!");
 }
