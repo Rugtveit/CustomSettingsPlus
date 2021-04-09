@@ -1,6 +1,6 @@
 # CustomSettingsPlus
 
-CustomSettingsPlus is a beatsaber mod for Oculus Quest 1 & 2.  
+CustomSettingsPlus is a BeatSaber mod for Oculus Quest 1 & 2.  
 It adds more settings to the game which allows you to modify more of the game to your preference.
 
 # Planned features  
